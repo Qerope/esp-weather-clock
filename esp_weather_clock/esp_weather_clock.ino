@@ -1,10 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <WiFiUdp.h>
+#include <NTPClient.h>
 
 const char* ssid = "your-ssid";
 const char* password = "your-password";
 Adafruit_SSD1306 display(-1);
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
 
 void setup() {
   Serial.begin(115200);
@@ -21,7 +25,9 @@ void setup() {
   display.setCursor(0, 0);
   display.println(WiFi.localIP());
   display.display();
+  timeClient.begin();
 }
 
 void loop() {
+  timeClient.update();
 }
