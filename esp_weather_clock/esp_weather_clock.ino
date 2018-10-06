@@ -28,6 +28,18 @@ void setup() {
   timeClient.begin();
 }
 
+void drawClock() {
+  display.clearDisplay();
+  display.setTextSize(3);
+  display.setCursor(4, 4);
+  char buf[6];
+  snprintf(buf, sizeof(buf), "%02d:%02d", timeClient.getHours(), timeClient.getMinutes());
+  display.print(buf);
+  display.display();
+}
+
 void loop() {
   timeClient.update();
+  drawClock();
+  delay(1000);
 }
