@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <WiFiUdp.h>
@@ -28,6 +29,12 @@ void setup() {
   timeClient.begin();
 }
 
+bool fetchWeather() {
+  HTTPClient http;
+  http.begin(String("http://api.openweathermap.org/data/2.5/weather?q=") + OWM_CITY +
+             "&units=metric&appid=" + OWM_KEY);
+  int code = http.GET();
+
 void drawClock() {
   display.clearDisplay();
   display.setTextSize(3);
@@ -40,6 +47,9 @@ void drawClock() {
 
 void loop() {
   timeClient.update();
+    fetchWeather();
+    lastWeather = millis();
   drawClock();
   delay(1000);
+  yield();
 }
