@@ -4,12 +4,15 @@
 #include <Adafruit_SSD1306.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
+#include <ArduinoJson.h>
 
 const char* ssid = "your-ssid";
 const char* password = "your-password";
 Adafruit_SSD1306 display(-1);
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
+float temperature = NAN;
+String condition = "";
 
 void setup() {
   Serial.begin(115200);
@@ -34,6 +37,17 @@ bool fetchWeather() {
   http.begin(String("http://api.openweathermap.org/data/2.5/weather?q=") + OWM_CITY +
              "&units=metric&appid=" + OWM_KEY);
   int code = http.GET();
+  String body = http.getString();
+  http.end();
+  DynamicJsonBuffer buf;
+  JsonObject& root = buf.parseObject(body);
+  if (!root.success()) {
+    return false;
+  }
+  temperature = root["main"]["temp"];
+  condition = root["weather"][0]["main"].as<String>();
+  return true;
+}
 
 void drawClock() {
   display.clearDisplay();
