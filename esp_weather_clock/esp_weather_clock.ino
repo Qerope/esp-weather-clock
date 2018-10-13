@@ -6,8 +6,8 @@
 #include <NTPClient.h>
 #include <ArduinoJson.h>
 
-const char* ssid = "your-ssid";
-const char* password = "your-password";
+#include "config.h"
+
 Adafruit_SSD1306 display(-1);
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
@@ -17,6 +17,7 @@ String condition = "";
 void setup() {
   Serial.begin(115200);
   WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");

@@ -1,0 +1,5 @@
+#define WIFI_SSID "your-ssid"
+#define WIFI_PASS "your-password"
+#define OWM_KEY "api-key"
+#define OWM_CITY "Boston,US"
+#define TZ_OFFSET (-5 * 3600)
