@@ -11,6 +11,9 @@
 Adafruit_SSD1306 display(-1);
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
+
+const unsigned long WEATHER_INTERVAL = 600000UL;
+unsigned long lastWeather = 0;
 float temperature = NAN;
 String condition = "";
 
@@ -62,8 +65,10 @@ void drawClock() {
 
 void loop() {
   timeClient.update();
+  if (lastWeather == 0 || millis() - lastWeather > WEATHER_INTERVAL) {
     fetchWeather();
     lastWeather = millis();
+  }
   drawClock();
   delay(1000);
   yield();
