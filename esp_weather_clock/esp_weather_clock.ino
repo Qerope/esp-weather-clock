@@ -41,6 +41,10 @@ bool fetchWeather() {
   http.begin(String("http://api.openweathermap.org/data/2.5/weather?q=") + OWM_CITY +
              "&units=metric&appid=" + OWM_KEY);
   int code = http.GET();
+  if (code != 200) {
+    http.end();
+    return false;
+  }
   String body = http.getString();
   http.end();
   DynamicJsonBuffer buf;
@@ -66,8 +70,11 @@ void drawClock() {
 void loop() {
   timeClient.update();
   if (lastWeather == 0 || millis() - lastWeather > WEATHER_INTERVAL) {
-    fetchWeather();
-    lastWeather = millis();
+    if (fetchWeather()) {
+      lastWeather = millis();
+    } else {
+      lastWeather = millis() - WEATHER_INTERVAL + 60000UL;
+    }
   }
   drawClock();
   delay(1000);
