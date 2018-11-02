@@ -10,7 +10,7 @@
 
 Adafruit_SSD1306 display(-1);
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000);
+NTPClient timeClient(ntpUDP, "pool.ntp.org", TZ_OFFSET, 60000);
 
 const unsigned long WEATHER_INTERVAL = 600000UL;
 unsigned long lastWeather = 0;
