@@ -64,6 +64,13 @@ void drawClock() {
   char buf[6];
   snprintf(buf, sizeof(buf), "%02d:%02d", timeClient.getHours(), timeClient.getMinutes());
   display.print(buf);
+  display.setTextSize(1);
+  display.setCursor(4, 44);
+  if (!isnan(temperature)) {
+    display.print(temperature, 1);
+    display.print(" C  ");
+    display.print(condition);
+  }
   display.display();
 }
 
