@@ -16,6 +16,7 @@ const unsigned long WEATHER_INTERVAL = 600000UL;
 unsigned long lastWeather = 0;
 float temperature = NAN;
 String condition = "";
+unsigned long lastTick = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -83,7 +84,9 @@ void loop() {
       lastWeather = millis() - WEATHER_INTERVAL + 60000UL;
     }
   }
-  drawClock();
-  delay(1000);
+  if (millis() - lastTick >= 1000) {
+    lastTick = millis();
+    drawClock();
+  }
   yield();
 }
