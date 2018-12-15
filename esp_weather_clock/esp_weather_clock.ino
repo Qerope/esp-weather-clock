@@ -5,6 +5,7 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 #include <ArduinoJson.h>
+#include <ArduinoOTA.h>
 
 #include "config.h"
 
@@ -35,6 +36,8 @@ void setup() {
   display.println(WiFi.localIP());
   display.display();
   timeClient.begin();
+  ArduinoOTA.setHostname("esp-clock");
+  ArduinoOTA.begin();
 }
 
 bool fetchWeather() {
@@ -76,6 +79,7 @@ void drawClock() {
 }
 
 void loop() {
+  ArduinoOTA.handle();
   timeClient.update();
   if (lastWeather == 0 || millis() - lastWeather > WEATHER_INTERVAL) {
     if (fetchWeather()) {
