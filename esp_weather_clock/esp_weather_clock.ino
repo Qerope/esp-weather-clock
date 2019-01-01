@@ -75,6 +75,8 @@ void drawClock() {
     display.print(" C  ");
     display.print(condition);
   }
+  bool night = timeClient.getHours() >= 23 || timeClient.getHours() < 6;
+  display.dim(night);
   display.display();
 }
 
