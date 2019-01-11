@@ -19,15 +19,21 @@ float temperature = NAN;
 String condition = "";
 unsigned long lastTick = 0;
 
+void connectWifi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  unsigned long start = millis();
+  while (WiFi.status() != WL_CONNECTED) {
+    if (millis() - start > 20000) {
+      ESP.restart();
+    }
+    delay(500);
+  }
+}
+
 void setup() {
   Serial.begin(115200);
-  WiFi.begin(ssid, password);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println(WiFi.localIP());
+  connectWifi();
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
   display.setTextColor(WHITE);
@@ -81,6 +87,9 @@ void drawClock() {
 }
 
 void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWifi();
+  }
   ArduinoOTA.handle();
   timeClient.update();
   if (lastWeather == 0 || millis() - lastWeather > WEATHER_INTERVAL) {
